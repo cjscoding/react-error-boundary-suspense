@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./styles.css";
+import Before from "./before";
+import After from "./after";
+import { ErrorBoundary } from "react-error-boundary";
 
-function App() {
+const ErrorFallback = ({ error, resetErrorBoundary }) => {
+  return (
+    <div role="alert">
+      <p>에러 발생:</p>
+      <pre>{error.message}</pre>
+      <button onClick={resetErrorBoundary}>다시 시도하세요</button>
+    </div>
+  );
+};
+
+export default function App() {
+  const [on, setOn] = useState(false);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <h1>React Suspense 예제</h1>
+        <button onClick={() => setOn((on) => !on)}>
+          {on ? "Suspense 끄기" : "Suspense 켜기"}
+        </button>
+        <hr />
+        {on ? <After /> : <Before />}
+      </ErrorBoundary>
     </div>
   );
 }
-
-export default App;
